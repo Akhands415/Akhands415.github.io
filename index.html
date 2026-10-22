@@ -109,6 +109,9 @@ section h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); letter-spacing: -0.02em; m
 .project.teal { --pc: var(--c-teal); --pt: var(--tint-teal); }
 .project.violet { --pc: var(--c-violet); --pt: var(--tint-violet); }
 .project.coral { --pc: var(--c-coral); --pt: var(--tint-coral); }
+.project.amber { --pc: var(--c-amber); --pt: var(--tint-amber); }
+.repo { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+.vt { font-family: var(--font-mono); font-size: 11px; font-weight: 500; fill: var(--fg); }
 .project h3 { font-size: 1.3rem; }
 .project ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--muted); font-size: 15px; }
 .project ul li::marker { color: var(--pc); }
@@ -264,6 +267,44 @@ footer { margin-top: 28px; color: var(--muted); font-size: 13px; font-family: va
     </div>
   </section>
 
+  <section id="github">
+    <p class="eyebrow">From GitHub</p>
+    <h2>Analysis and machine learning</h2>
+    <div class="projects">
+
+      <article class="project">
+        <h3>Airline Fare Prediction</h3>
+        <figure class="chart" style="margin:0">
+          <svg id="chart-fare" viewBox="0 0 360 190" role="img" aria-label="Bar chart of Random Forest R squared score on training data and on test data"></svg>
+          <figcaption><span>Random Forest R² score</span><span>From the notebook</span></figcaption>
+        </figure>
+        <ul>
+          <li>Predicts flight ticket prices from route, airline, stops and timing.</li>
+          <li>Cleaned dates and durations, encoded categories, removed outliers and chose features by mutual information.</li>
+          <li>Compared several regressors, then tuned Random Forest with randomized search.</li>
+        </ul>
+        <div class="tags"><span class="tag">Python</span><span class="tag">scikit-learn</span><span class="tag">Pandas</span><span class="tag">Seaborn</span></div>
+        <a class="repo" href="https://github.com/Akhands415/Predict-Fare-of-Airlines-Ticket-Using-Machine-Learning" target="_blank" rel="noopener">View on GitHub →</a>
+      </article>
+
+      <article class="project amber">
+        <h3>Hotel Booking Analysis</h3>
+        <figure class="chart" style="margin:0">
+          <svg id="chart-hotel" viewBox="0 0 360 190" role="img" aria-label="Bar chart of confirmed hotel bookings by arrival month, with August highest"></svg>
+          <figcaption><span>Confirmed bookings by month</span><span>From the dataset</span></figcaption>
+        </figure>
+        <ul>
+          <li>Exploratory analysis of 119,000 bookings across a city hotel and a resort hotel.</li>
+          <li>About 37% of bookings were cancelled. August is the busiest month, and city hotel bookings outnumber resort bookings.</li>
+          <li>Also covers length of stay, guest origin, room prices and guest types.</li>
+        </ul>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Pandas</span><span class="tag">Plotly</span><span class="tag">Seaborn</span></div>
+        <a class="repo" href="https://github.com/Akhands415/Hotel-Booking---Analysis" target="_blank" rel="noopener">View on GitHub →</a>
+      </article>
+
+    </div>
+  </section>
+
   <section id="experience">
     <p class="eyebrow">Experience</p>
     <h2>Where I have worked</h2>
@@ -369,7 +410,7 @@ footer { margin-top: 28px; color: var(--muted); font-size: 13px; font-family: va
   var W = 360, H = 190, L = 12, R = 348, B = 160, T = 14;
 
   // Sample visuals use illustrative values only; no axis numbers are shown.
-  function bars(id, labels, vals, colors) {
+  function bars(id, labels, vals, colors, vlabels) {
     var svg = document.getElementById(id), max = Math.max.apply(null, vals);
     var slot = (R - L) / vals.length, bw = slot * 0.56;
     for (var g = 0; g < 3; g++) el('line', { x1: L, x2: R, y1: T + g * (B - T) / 3, y2: T + g * (B - T) / 3, stroke: 'var(--line)', 'stroke-width': 1 }, svg);
@@ -377,6 +418,7 @@ footer { margin-top: 28px; color: var(--muted); font-size: 13px; font-family: va
       var h = (B - T) * v / max, x = L + i * slot + (slot - bw) / 2;
       el('rect', { x: x, y: B - h, width: bw, height: h, rx: 5, style: 'fill:' + colors[i] }, svg);
       text(svg, x + bw / 2, B + 16, labels[i]);
+      if (vlabels) { var vt = text(svg, x + bw / 2, B - h - 6, vlabels[i]); vt.setAttribute('class', 'vt'); }
     });
     el('line', { x1: L, x2: R, y1: B, y2: B, stroke: 'var(--muted)', 'stroke-width': 1.2 }, svg);
   }
@@ -425,6 +467,12 @@ footer { margin-top: 28px; color: var(--muted); font-size: 13px; font-family: va
 
   grouped('chart-mkt', ['Google', 'Facebook', 'LinkedIn', 'Display'], [70, 88, 46, 30], [58, 94, 34, 22],
           'var(--c-amber)', 'var(--c-coral)');
+
+  bars('chart-fare', ['Training', 'Test'], [0.956, 0.784], ['var(--c-blue)', 'var(--c-violet)'], ['0.96', '0.78']);
+
+  var mon = [4122, 5372, 6645, 6565, 7114, 6404, 7919, 8638, 6392, 6914, 4672, 4409];
+  var mc = mon.map(function (v, i) { return i === 7 ? 'var(--c-amber)' : 'var(--c-blue)'; });
+  bars('chart-hotel', ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], mon, mc);
 
   var btn = document.getElementById('copy'), mail = document.getElementById('mail');
   btn.addEventListener('click', function () {
